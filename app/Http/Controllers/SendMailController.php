@@ -5,28 +5,36 @@
 // use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Mail;
 // use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Cache;
+// use App\Services\MailCsvService;
 
 // class SendMailController extends Controller
 // {
+//     protected $service;
+
+//     public function __construct(MailCsvService $service)
+//     {
+//         $this->service = $service;
+//     }
+
 //     /**
-//      * Show the form for creating a new resource.
+//      * Afficher le formulaire d'envoi
 //      */
 //     public function create()
 //     {
-//         $headers = session('csv_headers', []);
-//         $csvData = session('csv_data', []);
-//         $filename = session('csv_filename', '');
-//         $rowCount = session('csv_row_count', 0);
-        
+//         $csvData = Cache::get('csv_data', []);
+//         $headers = Cache::get('csv_headers', []);
+//         $filename = Cache::get('csv_filename', '');
+//         $rowCount = count($csvData);
+
 //         return view('sendmail.send-mail', compact('headers', 'csvData', 'filename', 'rowCount'));
 //     }
 
 //     /**
-//      * Store a newly created resource in storage.
+//      * Envoyer les emails
 //      */
 //     public function store(Request $request)
 //     {
-//         // Validation
 //         $validated = $request->validate([
 //             'subject' => 'required|string|max:255',
 //             'body' => 'required|string',
@@ -34,16 +42,14 @@
 //             'from_name' => 'required|string|max:255',
 //         ]);
 
-//         // Récupérer les données CSV
-//         $headers = session('csv_headers', []);
-//         $csvData = session('csv_data', []);
+//         $csvData = Cache::get('csv_data', []);
+//         $headers = Cache::get('csv_headers', []);
 
 //         if (empty($csvData)) {
-//             return back()->with('error', 'Aucune donnée CSV disponible. Veuillez d\'abord importer un fichier CSV.');
+//             return back()->with('error', 'Aucune donnée CSV disponible. Importez un fichier avant.');
 //         }
 
-//         // Vérifier qu'il y a une colonne email
-//         $emailColumnIndex = array_search('email', $headers);
+//         $emailColumnIndex = $this->service->findEmailColumn($headers);
 //         if ($emailColumnIndex === false) {
 //             return back()->with('error', 'La colonne "email" est introuvable dans votre fichier CSV.');
 //         }
@@ -51,62 +57,37 @@
 //         $sentCount = 0;
 //         $failedEmails = [];
 
-//         // Parcourir chaque ligne du CSV
 //         foreach ($csvData as $row) {
 //             try {
-//                 // Récupérer l'email du destinataire
 //                 $recipientEmail = $row[$emailColumnIndex] ?? null;
-                
 //                 if (empty($recipientEmail) || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
-//                     continue; // Ignorer les emails invalides
+//                     continue;
 //                 }
 
-//                 // Personnaliser le sujet et le corps
-//                 $personalizedSubject = $this->replaceVariables($validated['subject'], $headers, $row);
-//                 $personalizedBody = $this->replaceVariables($validated['body'], $headers, $row);
+//                 $subject = $this->service->replaceVariables($validated['subject'], $headers, $row);
+//                 $body = $this->service->replaceVariables($validated['body'], $headers, $row);
 
-//                 // Envoyer l'email
-//                 Mail::raw($personalizedBody, function ($message) use ($recipientEmail, $personalizedSubject, $validated) {
+//                 Mail::raw($body, function ($message) use ($recipientEmail, $subject, $validated) {
 //                     $message->to($recipientEmail)
-//                             ->subject($personalizedSubject)
+//                             ->subject($subject)
 //                             ->from($validated['from_email'], $validated['from_name']);
 //                 });
 
 //                 $sentCount++;
-
 //             } catch (\Exception $e) {
 //                 Log::error('Erreur envoi email: ' . $e->getMessage());
 //                 $failedEmails[] = $recipientEmail ?? 'Email invalide';
 //             }
 //         }
 
-//         // Retour avec message de succès
-//         if ($sentCount > 0) {
-//             $message = $sentCount === count($csvData) 
-//                 ? 'Tous les emails ont été envoyés avec succès!' 
-//                 : "$sentCount email(s) envoyé(s) sur " . count($csvData);
-            
-//             return redirect()->route('sendMail.create')->with([
-//                 'success' => $message,
-//                 'sent_count' => $sentCount
-//             ]);
-//         }
+//         $message = $sentCount > 0 
+//             ? "$sentCount email(s) envoyé(s) sur " . count($csvData) 
+//             : 'Aucun email n\'a pu être envoyé.';
 
-//         return back()->with('error', 'Aucun email n\'a pu être envoyé. Vérifiez vos données CSV.');
-//     }
-
-//     /**
-//      * Remplacer les variables dynamiques dans le texte
-//      */
-//     private function replaceVariables(string $text, array $headers, array $row): string
-//     {
-//         foreach ($headers as $index => $header) {
-//             $value = $row[$index] ?? '';
-//             // $text = str_replace("{{" . $header . "}}", $value, $text);
-//             $text = str_replace("{{{$header}}}", $value, $text);
-//         }
-        
-//         return $text;
+//         return redirect()->route('sendMail.create')->with([
+//             'success' => $message,
+//             'sent_count' => $sentCount
+//         ]);
 //     }
 // }
 
@@ -132,8 +113,8 @@ class SendMailController extends Controller
      */
     public function create()
     {
-        $csvData = Cache::get('csv_data', []);
-        $headers = Cache::get('csv_headers', []);
+        $csvData  = Cache::get('csv_data', []);
+        $headers  = Cache::get('csv_headers', []);
         $filename = Cache::get('csv_filename', '');
         $rowCount = count($csvData);
 
@@ -146,22 +127,24 @@ class SendMailController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'subject' => 'required|string|max:255',
-            'body' => 'required|string',
+            'subject'    => 'required|string|max:255',
+            'body'       => 'required|string',
             'from_email' => 'required|email',
-            'from_name' => 'required|string|max:255',
+            'from_name'  => 'required|string|max:255',
         ]);
 
+        // Récupération des données importées
         $csvData = Cache::get('csv_data', []);
         $headers = Cache::get('csv_headers', []);
 
         if (empty($csvData)) {
-            return back()->with('error', 'Aucune donnée CSV disponible. Importez un fichier avant.');
+            return back()->with('error', 'Aucune donnée CSV disponible. Veuillez importer un fichier avant.');
         }
 
+        // Vérifier la colonne email
         $emailColumnIndex = $this->service->findEmailColumn($headers);
         if ($emailColumnIndex === false) {
-            return back()->with('error', 'La colonne "email" est introuvable dans votre fichier CSV.');
+            return back()->with('error', 'La colonne "email" est introuvable dans votre fichier.');
         }
 
         $sentCount = 0;
@@ -170,13 +153,17 @@ class SendMailController extends Controller
         foreach ($csvData as $row) {
             try {
                 $recipientEmail = $row[$emailColumnIndex] ?? null;
-                if (empty($recipientEmail) || !filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+
+                if (!filter_var($recipientEmail, FILTER_VALIDATE_EMAIL)) {
+                    $failedEmails[] = $recipientEmail;
                     continue;
                 }
 
+                // Remplacement des variables dans le sujet et le corps
                 $subject = $this->service->replaceVariables($validated['subject'], $headers, $row);
-                $body = $this->service->replaceVariables($validated['body'], $headers, $row);
+                $body    = $this->service->replaceVariables($validated['body'], $headers, $row);
 
+                // Envoi email Gmail
                 Mail::raw($body, function ($message) use ($recipientEmail, $subject, $validated) {
                     $message->to($recipientEmail)
                             ->subject($subject)
@@ -184,19 +171,22 @@ class SendMailController extends Controller
                 });
 
                 $sentCount++;
+
             } catch (\Exception $e) {
-                Log::error('Erreur envoi email: ' . $e->getMessage());
-                $failedEmails[] = $recipientEmail ?? 'Email invalide';
+                Log::error('Erreur envoi email vers ' . $recipientEmail . ' : ' . $e->getMessage());
+                $failedEmails[] = $recipientEmail;
             }
         }
 
         $message = $sentCount > 0 
-            ? "$sentCount email(s) envoyé(s) sur " . count($csvData) 
-            : 'Aucun email n\'a pu être envoyé.';
+            ? "$sentCount email(s) envoyé(s) sur " . count($csvData)
+            : "Aucun email n'a pu être envoyé.";
 
         return redirect()->route('sendMail.create')->with([
             'success' => $message,
-            'sent_count' => $sentCount
+            'sent_count' => $sentCount,
+            'failed_emails' => $failedEmails,
         ]);
     }
 }
+
