@@ -1,3 +1,11 @@
+@php
+use Illuminate\Support\Facades\Cache;
+$headers = Cache::get('csv_headers', []);
+$csvData = Cache::get('csv_data', []);
+$filename = Cache::get('csv_filename', '');
+$rowCount = count($csvData);
+@endphp
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -124,9 +132,7 @@
                         <label for="from_email" class="block text-sm font-bold text-gray-700 mb-2">
                             <i class="fas fa-user mr-2"></i>Email expéditeur
                         </label>
-                        <input type="email" 
-                               name="from_email" 
-                               id="from_email" 
+                        <input type="email" name="from_email" id="from_email" 
                                value="{{ old('from_email') }}"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                placeholder="votre-email@exemple.com"
@@ -138,10 +144,7 @@
                         <label for="from_name" class="block text-sm font-bold text-gray-700 mb-2">
                             <i class="fas fa-signature mr-2"></i>Nom de l'expéditeur
                         </label>
-                        <input type="text" 
-                               name="from_name" 
-                               id="from_name" 
-                               value="{{ old('from_name') }}"
+                        <input type="text" name="from_name" id="from_name" value="{{ old('from_name') }}"
                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                placeholder="Votre Nom ou Entreprise"
                                required>
@@ -149,13 +152,10 @@
 
                     <!-- Boutons d'action -->
                     <div class="flex gap-4">
-                        <button type="submit" 
-                                class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105">
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-paper-plane mr-2"></i>Envoyer les emails
                         </button>
-                        <button type="button" 
-                                onclick="previewEmail()"
-                                class="bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-xl hover:bg-gray-300 transition-colors duration-300">
+                        <button type="button" onclick="previewEmail()" class="bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-xl hover:bg-gray-300 transition-colors duration-300">
                             <i class="fas fa-eye mr-2"></i>Aperçu
                         </button>
                     </div>
@@ -235,40 +235,24 @@
     <!-- Modal d'aperçu -->
     <div id="previewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-2xl font-bold text-gray-800">
-                        <i class="fas fa-eye text-purple-600 mr-2"></i>Aperçu du message
-                    </h3>
-                    <button onclick="closePreview()" class="text-gray-500 hover:text-gray-700">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-800"><i class="fas fa-eye text-purple-600 mr-2"></i>Aperçu du message</h3>
+                <button onclick="closePreview()" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
             </div>
             <div class="p-6">
-                <div class="mb-4">
-                    <p class="text-sm font-bold text-gray-600 mb-1">Sujet:</p>
-                    <p id="previewSubject" class="text-lg font-semibold text-gray-800"></p>
-                </div>
-                <div class="mb-4">
-                    <p class="text-sm font-bold text-gray-600 mb-1">Corps:</p>
-                    <div id="previewBody" class="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-gray-800"></div>
-                </div>
-                <p class="text-xs text-gray-500 italic">
-                    <i class="fas fa-info-circle mr-1"></i>
-                    Ceci est un aperçu avec les données de la première ligne du CSV
-                </p>
+                <p class="text-sm font-bold text-gray-600 mb-1">Sujet:</p>
+                <p id="previewSubject" class="text-lg font-semibold text-gray-800 mb-4"></p>
+                <p class="text-sm font-bold text-gray-600 mb-1">Corps:</p>
+                <div id="previewBody" class="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-gray-800"></div>
+                <p class="text-xs text-gray-500 italic mt-2"><i class="fas fa-info-circle mr-1"></i>Ceci est un aperçu avec les données de la première ligne du CSV</p>
             </div>
         </div>
     </div>
 
     <script>
-        @verbatim
         function copyVariable(varName) {
-            const text = `{{${varName}}}`;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(`Variable ${text} copiée!`);
-            });
+            const text = `@{{${varName}}}`;
+            navigator.clipboard.writeText(text).then(() => { showToast(`Variable ${text} copiée!`) });
         }
 
         function showToast(message) {
@@ -280,68 +264,48 @@
         }
 
         function showVariables(targetField) {
-            // Scroll vers les variables
             const variablesSection = document.querySelector('.space-y-2');
-            if (variablesSection) {
-                variablesSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
+            if(variablesSection) variablesSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
-        function closePreview() {
-            document.getElementById('previewModal').classList.add('hidden');
-        }
-
-        // Fermer le modal en cliquant à l'extérieur
-        document.getElementById('previewModal')?.addEventListener('click', (e) => {
-            if (e.target.id === 'previewModal') {
-                closePreview();
-            }
-        });
-        @endverbatim
+        function closePreview() { document.getElementById('previewModal').classList.add('hidden'); }
+        document.getElementById('previewModal')?.addEventListener('click', (e) => { if(e.target.id==='previewModal'){closePreview()} });
 
         function previewEmail() {
             const subject = document.getElementById('subject').value;
             const body = document.getElementById('body').value;
-            
+
             @if(!empty($csvData) && count($csvData) > 0)
-                // Utiliser la première ligne de données pour l'aperçu
                 let previewSubject = subject;
                 let previewBody = body;
-                
                 const firstRow = @json($csvData[0] ?? []);
                 const headers = @json($headers);
-                
-                // Remplacer les variables
+
                 headers.forEach((header, index) => {
-                    const regex = new RegExp('{{' + header + '}}', 'g');
+                    const regex1 = new RegExp('{{' + header + '}}', 'g');
+                    const regex2 = new RegExp('@{{' + header + '}}', 'g');
                     const value = firstRow[index] || '';
-                    previewSubject = previewSubject.replace(regex, value);
-                    previewBody = previewBody.replace(regex, value);
+                    previewSubject = previewSubject.replace(regex1, value).replace(regex2, value);
+                    previewBody = previewBody.replace(regex1, value).replace(regex2, value);
                 });
-                
+
                 document.getElementById('previewSubject').textContent = previewSubject;
                 document.getElementById('previewBody').textContent = previewBody;
             @else
                 document.getElementById('previewSubject').textContent = subject;
                 document.getElementById('previewBody').textContent = body;
             @endif
-            
+
             document.getElementById('previewModal').classList.remove('hidden');
         }
 
         // Animation
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in {
-                animation: fadeIn 0.3s ease-out;
-            }
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+            .animate-fade-in { animation: fadeIn 0.3s ease-out; }
         `;
         document.head.appendChild(style);
     </script>
 </body>
 </html>
-

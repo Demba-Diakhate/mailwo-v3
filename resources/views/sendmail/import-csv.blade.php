@@ -1,3 +1,10 @@
+@php
+use Illuminate\Support\Facades\Cache;
+$headers = Cache::get('csv_headers', []);
+$rowCount = count(Cache::get('csv_data', []));
+$filename = Cache::get('csv_filename', '');
+@endphp
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -108,26 +115,14 @@
                         Instructions
                     </h3>
                     <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                            <span>Le fichier doit être au format <strong>CSV</strong></span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                            <span>Taille maximale : <strong>10 MB</strong></span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                            <span>La première ligne doit contenir les <strong>en-têtes</strong></span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                            <span>Format d'encodage recommandé : <strong>UTF-8</strong></span>
-                        </li>
+                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>Le fichier doit être au format <strong>CSV</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>Taille maximale : <strong>10 MB</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>La première ligne doit contenir les <strong>en-têtes</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>Format d'encodage recommandé : <strong>UTF-8</strong></li>
                     </ul>
                 </div>
 
-                <!-- Exemple de format -->
+                <!-- Exemple de format CSV -->
                 <div class="bg-white rounded-xl shadow-xl p-8">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                         <i class="fas fa-table text-purple-600 mr-3"></i>
@@ -135,34 +130,30 @@
                     </h3>
                     <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
                         <pre>email,nom,prenom,entreprise
-contact@example.com,Dupont,Jean,ACME Corp
-client@test.fr,Martin,Sophie,TechStart</pre>
+                        contact@example.com,Dupont,Jean,ACME Corp
+                        client@test.fr,Martin,Sophie,TechStart
+                        </pre>
                     </div>
                 </div>
 
                 <!-- Aperçu des headers si disponibles -->
-                @if(session('headers'))
+                @if(!empty($headers))
                 <div class="bg-white rounded-xl shadow-xl p-8 mt-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                         <i class="fas fa-list text-indigo-600 mr-3"></i>
                         Colonnes détectées
                     </h3>
                     <div class="flex flex-wrap gap-2">
-                        @foreach(session('headers') as $header)
+                        @foreach($headers as $header)
                         <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full font-semibold text-sm">
                             <i class="fas fa-tag mr-1"></i>{{ $header }}
                         </span>
                         @endforeach
                     </div>
-                    <div class="mt-4 pt-4 border-t border-gray-200">
-                        <p class="text-sm text-gray-600">
-                            <i class="fas fa-database mr-2"></i>
-                            Fichier : <strong>{{ session('csv_filename') }}</strong>
-                        </p>
-                        <p class="text-sm text-gray-600 mt-1">
-                            <i class="fas fa-list-ol mr-2"></i>
-                            Nombre de lignes : <strong>{{ session('csv_row_count') }}</strong>
-                        </p>
+                    <div class="my-4 pt-4 border-t border-gray-200">
+                        <p class="text-sm text-gray-600"><i class="fas fa-database mr-2"></i>Fichier : <strong>{{ $filename }}</strong></p>
+                        <p class="text-sm text-gray-600 mt-1"><i class="fas fa-list-ol mr-2"></i>Nombre de lignes : <strong>{{ $rowCount }}</strong></p>
+                        <p class="text-sm text-gray-600 mt-1"><i class="fas fa-list-ol mr-2"></i>Nombre de colonnes : <strong>{{ count($headers) }}</strong></p>
                     </div>
                     <a href="{{ route('sendMail.create') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300">Envoyer des mails</a>
                 </div>
@@ -180,67 +171,39 @@ client@test.fr,Martin,Sophie,TechStart</pre>
         const fileSize = document.getElementById('fileSize');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Drag & Drop
-        dropZone.addEventListener('click', () => {
-            if (!fileInput.files.length) {
-                fileInput.click();
-            }
-        });
-
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('border-indigo-500', 'bg-indigo-50');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('border-indigo-500', 'bg-indigo-50');
-        });
-
+        dropZone.addEventListener('click', () => { if(!fileInput.files.length) fileInput.click(); });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-indigo-500', 'bg-indigo-50'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-indigo-500', 'bg-indigo-50'); });
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropZone.classList.remove('border-indigo-500', 'bg-indigo-50');
-            
             const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                fileInput.files = files;
-                displayFileInfo(files[0]);
-            }
+            if(files.length>0) { fileInput.files=files; displayFileInfo(files[0]); }
         });
-
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                displayFileInfo(e.target.files[0]);
-            }
-        });
+        fileInput.addEventListener('change', (e) => { if(e.target.files.length>0) displayFileInfo(e.target.files[0]); });
 
         function displayFileInfo(file) {
             uploadIcon.classList.add('hidden');
             fileInfo.classList.remove('hidden');
             fileName.textContent = file.name;
-            fileSize.textContent = `Taille: ${(file.size / 1024).toFixed(2)} KB`;
-            submitBtn.disabled = false;
+            fileSize.textContent = `Taille: ${(file.size/1024).toFixed(2)} KB`;
+            submitBtn.disabled=false;
         }
 
         function clearFile() {
-            fileInput.value = '';
+            fileInput.value='';
             uploadIcon.classList.remove('hidden');
             fileInfo.classList.add('hidden');
-            submitBtn.disabled = true;
+            submitBtn.disabled=true;
         }
 
-        // Animation
+        // Animation fadeIn
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in {
-                animation: fadeIn 0.5s ease-out;
-            }
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+            .animate-fade-in { animation: fadeIn 0.5s ease-out; }
         `;
         document.head.appendChild(style);
     </script>
 </body>
 </html>
-
