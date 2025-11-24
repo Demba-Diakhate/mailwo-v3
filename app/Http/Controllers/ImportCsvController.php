@@ -27,7 +27,7 @@ class ImportCsvController extends Controller
     {
         // Validation du fichier CSV
         $request->validate([
-            'csv_file' => 'required|file|mimes:csv,txt|max:10240', // max 10MB
+            'csv_file' => 'required|file|mimes:csv,txt,xlsx,xls|max:10240', // max 10MB
         ]);
 
         try {
