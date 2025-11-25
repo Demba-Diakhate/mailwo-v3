@@ -18,11 +18,20 @@ $filename = Cache::get('csv_filename', '');
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">
+        <div class="mb-8 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">
                 <i class="fas fa-file-csv text-indigo-600"></i> Import de fichiers CSV
-            </h1>
-            <p class="text-gray-600">Importez vos contacts depuis un fichier CSV</p>
+                </h1>
+                <p class="text-gray-600">Importez vos contacts depuis un fichier CSV</p>
+            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button class="px-3 py-1 bg-indigo-600 text-white rounded cursor-pointer">
+                    Déconnexion
+                </button>
+            </form>
+
         </div>
 
         <!-- Messages de succès/erreur -->
@@ -129,10 +138,9 @@ $filename = Cache::get('csv_filename', '');
                         Exemple de format CSV
                     </h3>
                     <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-                        <pre>email,nom,prenom,entreprise
-                        contact@example.com,Dupont,Jean,ACME Corp
-                        client@test.fr,Martin,Sophie,TechStart
-                        </pre>
+                        <pre>email,nom,prenom,entreprise</pre>
+                        <pre>contact@example.com,Dupont,Jean,ACME Corp</pre>
+                        <pre>client@test.fr,Martin,Sophie,TechStart</pre>
                     </div>
                 </div>
 

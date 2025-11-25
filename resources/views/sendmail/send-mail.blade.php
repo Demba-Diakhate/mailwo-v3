@@ -19,11 +19,17 @@ $rowCount = count($csvData);
 <body class="bg-gradient-to-br from-purple-50 to-pink-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <div class="mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-paper-plane text-purple-600"></i> Envoi de Mails Personnalisés
-            </h1>
-            <p class="text-gray-600">Composez et envoyez des emails personnalisés à vos contacts</p>
+        <div class="mb-8 flex flex-col md:flex-row md:justify-between md:items-center">
+            <div>
+                <h1 class="text-4xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-paper-plane text-purple-600"></i> Envoi de Mails Personnalisés
+                </h1>
+                <p class="text-gray-600">Composez et envoyez des emails personnalisés à vos contacts</p>
+            </div>
+            
+            <a href="{{ route('import.create') }}" class="px-3 py-1 mt-5 bg-green-700 text-white rounded cursor-pointer">
+                Importer un nouveaux fichier
+            </a>
         </div>
 
         <!-- Messages -->

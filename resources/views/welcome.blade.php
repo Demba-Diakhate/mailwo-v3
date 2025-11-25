@@ -10,7 +10,7 @@
                 Déconnexion
             </button>
         </form>
-        <a href="import/create" class="px-3 py-1 mt-5 bg-green-700 text-white rounded cursor-pointer">
+        <a href="{{ route('import.create') }}" class="px-3 py-1 mt-5 bg-green-700 text-white rounded cursor-pointer">
             Importer des contacts
         </a>
     </div>
