@@ -36,15 +36,18 @@ class SendFileEmail implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::send('emails.template', [
-            'subject' => $this->subject,
-            'body' => $this->body
-        ], function($message) {
-            $message->to($this->recipient)
-                    ->subject($this->subject)
-                    ->from($this->fromEmail, $this->fromName);
-        });
-
+        Mail::html(
+            view('emails.template', [
+                'subject' => $this->subject,
+                'body' => $this->body
+            ])->render(),
+            function ($message) {
+                $message->to($this->recipient)
+                        ->from($this->fromEmail, $this->fromName)
+                        ->subject($this->subject);
+            }
+        );
     }
+
 
 }

@@ -16,7 +16,7 @@ $rowCount = count($csvData);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-purple-50 to-pink-100 min-h-screen">
+<body class="bg-gradient-to-br from-purple-50 to-pink-100 p-6 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="mb-8 flex flex-col md:flex-row md:justify-between md:items-center">
@@ -27,7 +27,7 @@ $rowCount = count($csvData);
                 <p class="text-gray-600">Composez et envoyez des emails personnalisés à vos contacts</p>
             </div>
             
-            <a href="{{ route('import.create') }}" class="px-3 py-1 mt-5 bg-green-700 text-white rounded cursor-pointer">
+            <a href="{{ route('import.create') }}" class="px-3 py-1 mt-5 bg-green-700 text-white text-center rounded cursor-pointer">
                 Importer un nouveaux fichier
             </a>
         </div>
