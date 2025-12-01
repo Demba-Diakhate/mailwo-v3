@@ -73,13 +73,26 @@ class SendMailController extends Controller
                 $subject = $this->service->replaceVariables($validated['subject'], $headers, $row);
                 $body    = $this->service->replaceVariables($validated['body'], $headers, $row);
 
-                // Envoi email Gmail
-                SendFileEmail::dispatch(
-                    $recipientEmail,
-                    $subject,
-                    $body,
-                    $validated['from_email'],
-                    $validated['from_name']
+                // Envoi email Gmail par queue(job)
+                // SendFileEmail::dispatch(
+                //     $recipientEmail,
+                //     $subject,
+                //     $body,
+                //     $validated['from_email'],
+                //     $validated['from_name']
+                // );
+                
+                // Envoi email synchrones
+                Mail::html(
+                    view('emails.template', [
+                        'subject' => $subject,
+                        'body' => $body
+                    ])->render(),
+                    function ($message) use ($recipientEmail, $validated, $subject) {
+                        $message->to($recipientEmail)
+                                ->from($validated['from_email'], $validated['from_name'])
+                                ->subject($subject);
+                    }
                 );
 
                 $sentCount++;

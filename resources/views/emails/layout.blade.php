@@ -94,7 +94,7 @@
 
         <!-- Footer -->
         <div class="email-footer">
-            <p style="margin: 0 0 10px 0;">
+            <p style="margin: 0 0 10px 0; color:#DC2C8C">
                 <strong>Wommate Learning</strong>
             </p>
             <p style="margin: 0 0 20px 0; font-size: 13px;">

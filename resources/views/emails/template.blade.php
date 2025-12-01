@@ -1,29 +1,30 @@
 @extends('emails.layout')
+
 @section('content')
-<div>
-    <h1 style="color:red;">TEST TEMPLATE</h1>
+<div style="background:#ffffff; border-radius:8px;">
 
-    <div class="container">
+    <!-- Title -->
+    <h1 style="
+        font-size:22px;
+        font-weight:700;
+        color:#1B97B1;
+        margin:0 0 25px 0;
+        text-align:center;
+    ">
+        {{ $subject }}
+    </h1>
 
-        <!-- HEADER -->
-        <div class="header">
-            <!-- Logo -->
-            <img src="https://wommate.tech/img/logo_principal.png" alt="Wommate">
-            <div class="title">{{ $subject }}</div>
-        </div>
-
-        <!-- CONTENT -->
-        <div class="content">
-            {!! nl2br(e($body)) !!}
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer">
-            Wommate — Apprendre. Pratiquer. Réussir.<br>
-            Thiès, Sénégal — www.wommate.com  
-        </div>
-
+    <!-- Content container -->
+    <div style="
+        font-size:16px;
+        color:#374151;
+        line-height:1.7;
+        background:#ffffff;
+    ">
+        {!! nl2br(e($body)) !!}
     </div>
+
 </div>
 @endsection
+
 
