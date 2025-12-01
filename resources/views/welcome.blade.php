@@ -3,12 +3,14 @@
 @section('content')
 
 {{-- HEADER --}}
-<header class="w-full bg-white shadow">
-    <div x-data="{ open: false }" class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<header x-data="{ open: false }" class="w-full bg-white shadow">
+
+    {{-- TOP BAR --}}
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
         {{-- Logo Mailwo --}}
-        <a href="/" class="text-3xl font-extrabold text-blue-600">
-            Mailwo
+        <a href="/" class="text-3xl font-extrabold text-[#1B97B1]">
+            Mail<span class="text-[#DC2C8C]">wo</span>
         </a>
 
         {{-- Desktop Buttons --}}
@@ -16,14 +18,14 @@
 
             {{-- Campagne --}}
             <a href="{{ route('import.create') }}"
-               class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
+               class="px-4 py-2 bg-[#1B97B1] text-white font-medium rounded-md shadow hover:bg-[#1B97B1]/90 transition">
                 Lancer une campagne
             </a>
 
             {{-- Connexion --}}
             <a href="{{ route('login') }}"
-               class="px-4 py-2 text-blue-600 font-medium border border-blue-200 rounded-lg hover:bg-blue-50 transition">
-               Connexion
+               class="px-4 py-2 text-[#DC2C8C] font-medium border border-[#DC2C8C] rounded-md hover:text-white hover:bg-[#DC2C8C] hover:border-[#DC2C8C] transition">
+                Connexion
             </a>
         </div>
 
@@ -52,16 +54,15 @@
 
         {{-- Lancer une campagne --}}
         <a href="{{ route('import.create') }}"
-           class="block w-full text-left py-2 mt-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700">
+           class="block w-full px-4 py-2 mt-2 bg-[#1B97B1] text-white font-medium rounded-md hover:bg-[#1B97B1]/90 transition">
             Lancer une campagne
         </a>
 
         {{-- Connexion --}}
         <a href="{{ route('login') }}"
-           class="block w-full text-left py-2 mt-3 text-blue-600 font-medium border border-blue-200 rounded-lg hover:bg-blue-50">
+           class="block w-full px-4 py-2 mt-3 text-[#DC2C8C] font-medium border border-[#DC2C8C] rounded-md hover:text-white hover:bg-[#DC2C8C]">
             Connexion
         </a>
-
     </div>
 </header>
 
@@ -73,7 +74,7 @@
     {{-- HERO --}}
     <div class="text-center max-w-3xl">
         <h1 class="text-5xl font-extrabold text-gray-800 mb-4">
-            Bienvenue sur <span class="text-blue-600">Mailwo</span>
+            Bienvenue sur <span class="text-[#1B97B1]">Mailwo</span>
         </h1>
         <p class="text-gray-600 text-lg leading-relaxed">
             La plateforme simple et puissante pour envoyer vos campagnes d’emailing,
@@ -84,7 +85,7 @@
     <div class="mt-10">
         {{-- Inscription --}}
         <a href="{{ route('register') }}"
-            class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
+            class="px-4 py-2 bg-[#DC2C8C] text-white font-medium rounded-md shadow hover:bg-[#DC2C8C]/80 transition">
             Inscription
         </a>
     </div>

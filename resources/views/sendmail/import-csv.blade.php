@@ -15,19 +15,19 @@ $filename = Cache::get('csv_filename', '');
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 p-6 min-h-screen">
+<body class="bg-gradient-to-br from-[#1B97B1]/30 to-[#DC2C8C]/30 px-2 md:px-6 py-6 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="mb-8 flex flex-col md:flex-row justify-between items-center">
             <div>
-                <h1 class="text-4xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-file-csv text-indigo-600"></i> Import de fichiers CSV
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-file-csv text-[#1B97B1]"></i> Import de fichiers CSV
                 </h1>
                 <p class="text-gray-600">Importez vos contacts depuis un fichier CSV</p>
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button class="px-3 py-1 bg-indigo-600 text-white rounded cursor-pointer">
+                <button class="px-3 py-1 bg-[#DC2C8C] text-white rounded cursor-pointer">
                     Déconnexion
                 </button>
             </form>
@@ -76,7 +76,7 @@ $filename = Cache::get('csv_filename', '');
             <!-- Formulaire d'upload -->
             <div class="bg-white rounded-xl shadow-xl p-8">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                    <i class="fas fa-upload text-indigo-600 mr-3"></i>
+                    <i class="fas fa-upload text-[#1B97B1] mr-3"></i>
                     Télécharger un fichier CSV
                 </h2>
 
@@ -85,20 +85,20 @@ $filename = Cache::get('csv_filename', '');
                     
                     <!-- Zone de drag & drop -->
                     <div class="mb-6">
-                        <div id="dropZone" class="border-3 border-dashed border-indigo-300 rounded-xl p-8 text-center transition-all duration-300 hover:border-indigo-500 hover:bg-indigo-50 cursor-pointer">
+                        <div id="dropZone" class="border-3 border-dashed border-indigo-300 rounded-xl p-8 text-center transition-all duration-300 hover:border-[#1B97B1] hover:bg-[#1B97B1]/10 cursor-pointer">
                             <input type="file" name="csv_file" id="csv_file" class="hidden" accept=".csv,.txt" required>
                             
                             <div id="uploadIcon">
-                                <i class="fas fa-cloud-upload-alt text-6xl text-indigo-400 mb-4"></i>
+                                <i class="fas fa-cloud-upload-alt text-6xl text-[#1B97B1]/50 mb-4"></i>
                                 <p class="text-lg font-semibold text-gray-700 mb-2">Glissez-déposez votre fichier CSV ici</p>
                                 <p class="text-sm text-gray-500 mb-4">ou cliquez pour sélectionner un fichier</p>
-                                <button type="button" onclick="document.getElementById('csv_file').click()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300">
+                                <button type="button" onclick="document.getElementById('csv_file').click()" class="bg-[#1B97B1] text-white px-6 py-2 rounded-lg hover:bg-[#1B97B1] transition-colors duration-300">
                                     <i class="fas fa-folder-open mr-2"></i>Parcourir
                                 </button>
                             </div>
 
                             <div id="fileInfo" class="hidden">
-                                <i class="fas fa-file-csv text-6xl text-green-500 mb-4"></i>
+                                <i class="fas fa-file-csv text-6xl text-[#1B97B1] mb-4"></i>
                                 <p class="text-lg font-semibold text-gray-700" id="fileName"></p>
                                 <p class="text-sm text-gray-500" id="fileSize"></p>
                                 <button type="button" onclick="clearFile()" class="mt-3 text-red-600 hover:text-red-800">
@@ -109,7 +109,7 @@ $filename = Cache::get('csv_filename', '');
                     </div>
 
                     <!-- Bouton de soumission -->
-                    <button type="submit" id="submitBtn" disabled class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <button type="submit" id="submitBtn" disabled class="w-full bg-gradient-to-r from-[#1B97B1]/90 to-purple-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-[#1B97B1] hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                         <i class="fas fa-upload mr-2"></i>Importer le fichier CSV
                     </button>
                 </form>
@@ -120,14 +120,14 @@ $filename = Cache::get('csv_filename', '');
                 <!-- Instructions -->
                 <div class="bg-white rounded-xl shadow-xl p-8 mb-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-info-circle text-blue-600 mr-3"></i>
+                        <i class="fas fa-info-circle text-[#DC2C8C] mr-3"></i>
                         Instructions
                     </h3>
                     <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>Le fichier doit être au format <strong>CSV</strong></li>
-                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>Taille maximale : <strong>10 MB</strong></li>
-                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>La première ligne doit contenir les <strong>en-têtes</strong></li>
-                        <li class="flex items-start"><i class="fas fa-check text-green-500 mr-3 mt-1"></i>Format d'encodage recommandé : <strong>UTF-8</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Le fichier doit être au format <strong>CSV</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Taille maximale : <strong>10 MB</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>La première ligne doit contenir les <strong>en-têtes</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Format d'encodage recommandé : <strong>UTF-8</strong></li>
                     </ul>
                 </div>
 
@@ -148,12 +148,12 @@ $filename = Cache::get('csv_filename', '');
                 @if(!empty($headers))
                 <div class="bg-white rounded-xl shadow-xl p-8 mt-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-list text-indigo-600 mr-3"></i>
+                        <i class="fas fa-list text-[#1B97B1] mr-3"></i>
                         Colonnes détectées
                     </h3>
                     <div class="flex flex-wrap gap-2">
                         @foreach($headers as $header)
-                        <span class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-full font-semibold text-sm">
+                        <span class="bg-[#DC2C8C]/10 text-[#1B97B1] px-4 py-2 rounded-full font-semibold text-sm">
                             <i class="fas fa-tag mr-1"></i>{{ $header }}
                         </span>
                         @endforeach
@@ -163,7 +163,7 @@ $filename = Cache::get('csv_filename', '');
                         <p class="text-sm text-gray-600 mt-1"><i class="fas fa-list-ol mr-2"></i>Nombre de lignes : <strong>{{ $rowCount }}</strong></p>
                         <p class="text-sm text-gray-600 mt-1"><i class="fas fa-list-ol mr-2"></i>Nombre de colonnes : <strong>{{ count($headers) }}</strong></p>
                     </div>
-                    <a href="{{ route('sendMail.create') }}" class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300">Envoyer des mails</a>
+                    <a href="{{ route('sendMail.create') }}" class="bg-[#1B97B1] text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors duration-300">Envoyer des mails</a>
                 </div>
                 @endif
             </div>

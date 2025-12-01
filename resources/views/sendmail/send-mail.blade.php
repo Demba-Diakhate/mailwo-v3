@@ -16,18 +16,18 @@ $rowCount = count($csvData);
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gradient-to-br from-purple-50 to-pink-100 p-6 min-h-screen">
+<body class="bg-gradient-to-br from-[#1B97B1]/30 to-[#DC2C8C]/30 px-2 md:px-6 py-6 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
         <div class="mb-8 flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
-                <h1 class="text-4xl font-bold text-gray-800 mb-2">
-                    <i class="fas fa-paper-plane text-purple-600"></i> Envoi de Mails Personnalisés
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
+                    <i class="fas fa-paper-plane text-[#1B97B1]"></i> Envoi de Mails Personnalisés
                 </h1>
                 <p class="text-gray-600">Composez et envoyez des emails personnalisés à vos contacts</p>
             </div>
             
-            <a href="{{ route('import.create') }}" class="px-3 py-1 mt-5 bg-green-700 text-white text-center rounded cursor-pointer">
+            <a href="{{ route('import.create') }}" class="px-3 py-1 mt-5 bg-[#1B97B1] text-white text-center rounded cursor-pointer">
                 Importer un nouveaux fichier
             </a>
         </div>
@@ -90,7 +90,7 @@ $rowCount = count($csvData);
                     @csrf
 
                     <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                        <i class="fas fa-envelope text-purple-600 mr-3"></i>
+                        <i class="fas fa-envelope text-[#1B97B1] mr-3"></i>
                         Composer votre message
                     </h2>
 
@@ -107,7 +107,7 @@ $rowCount = count($csvData);
                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                    placeholder="Ex: Bonjour @{{prenom}}, voici notre offre spéciale"
                                    required>
-                            <button type="button" onclick="showVariables('subject')" class="absolute right-3 top-3 text-purple-600 hover:text-purple-800">
+                            <button type="button" onclick="showVariables('subject')" class="absolute right-3 top-3 text-[#1B97B1] hover:text-purple-800">
                                 <i class="fas fa-code"></i>
                             </button>
                         </div>
@@ -126,7 +126,7 @@ $rowCount = count($csvData);
                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                       placeholder="Bonjour @{{prenom}},&#x0a;&#x0a;Nous sommes ravis de vous contacter..."
                                       required>{{ old('body') }}</textarea>
-                            <button type="button" onclick="showVariables('body')" class="absolute right-3 top-3 text-purple-600 hover:text-purple-800">
+                            <button type="button" onclick="showVariables('body')" class="absolute right-3 top-3 text-[#1B97B1] hover:text-purple-800">
                                 <i class="fas fa-code"></i>
                             </button>
                         </div>
@@ -158,7 +158,7 @@ $rowCount = count($csvData);
 
                     <!-- Boutons d'action -->
                     <div class="flex gap-4">
-                        <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105">
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-[#1B97B1]/90 to-[#DC2C8C]/90 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-[#1B97B1] hover:to-[#DC2C8C] transition-all duration-300 transform hover:scale-105">
                             <i class="fas fa-paper-plane mr-2"></i>Envoyer les emails
                         </button>
                         <button type="button" onclick="previewEmail()" class="bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-xl hover:bg-gray-300 transition-colors duration-300">
@@ -174,7 +174,7 @@ $rowCount = count($csvData);
                 @if(!empty($headers))
                 <div class="bg-white rounded-xl shadow-xl p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-tags text-indigo-600 mr-3"></i>
+                        <i class="fas fa-tags text-[#DC2C8C] mr-3"></i>
                         Variables disponibles
                     </h3>
                     <p class="text-sm text-gray-600 mb-4">Cliquez pour copier</p>
@@ -182,9 +182,9 @@ $rowCount = count($csvData);
                         @foreach($headers as $header)
                         <button type="button" 
                                 onclick="copyVariable('{{ $header }}')"
-                                class="w-full text-left bg-indigo-50 hover:bg-indigo-100 px-4 py-3 rounded-lg transition-colors duration-200 group">
-                            <code class="text-indigo-800 font-mono text-sm">&#123;&#123;{{ $header }}&#125;&#125;</code>
-                            <i class="fas fa-copy float-right text-indigo-400 group-hover:text-indigo-600 mt-1"></i>
+                                class="w-full text-left bg-[#1B97B1]/10 hover:bg-[#1B97B1]/20 px-4 py-3 rounded-lg transition-colors duration-200 group">
+                            <code class="text-[#1B97B1] font-mono text-sm">&#123;&#123;{{ $header }}&#125;&#125;</code>
+                            <i class="fas fa-copy float-right text-[#1B97B1]/80 group-hover:text-[#1B97B1] mt-1"></i>
                         </button>
                         @endforeach
                     </div>
@@ -193,7 +193,7 @@ $rowCount = count($csvData);
                 <!-- Informations CSV -->
                 <div class="bg-white rounded-xl shadow-xl p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-info-circle text-blue-600 mr-3"></i>
+                        <i class="fas fa-info-circle text-[#1B97B1] mr-3"></i>
                         Informations
                     </h3>
                     <div class="space-y-3 text-sm text-gray-700">
@@ -203,11 +203,11 @@ $rowCount = count($csvData);
                         </div>
                         <div class="flex items-center justify-between pb-2 border-b">
                             <span class="font-semibold">Destinataires :</span>
-                            <span class="text-purple-600 font-bold">{{ $rowCount ?? 0 }}</span>
+                            <span class="text-[#DC2C8C] font-bold">{{ $rowCount ?? 0 }}</span>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="font-semibold">Colonnes :</span>
-                            <span class="text-gray-600">{{ count($headers) }}</span>
+                            <span class="text-[#1B97B1] font-bold">{{ count($headers) }}</span>
                         </div>
                     </div>
                 </div>
@@ -221,15 +221,15 @@ $rowCount = count($csvData);
                     </h3>
                     <ul class="space-y-2 text-sm text-gray-700">
                         <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                            <i class="fas fa-check text-[#1B97B1] mr-2 mt-1"></i>
                             <span>Personnalisez avec <code class="bg-gray-100 px-1 rounded">@{{variable}}</code></span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                            <i class="fas fa-check text-[#1B97B1] mr-2 mt-1"></i>
                             <span>Testez avec un aperçu avant d'envoyer</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                            <i class="fas fa-check text-[#1B97B1] mr-2 mt-1"></i>
                             <span>Vérifiez que votre CSV contient la colonne "email"</span>
                         </li>
                     </ul>
@@ -242,7 +242,7 @@ $rowCount = count($csvData);
     <div id="previewModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div class="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-2xl font-bold text-gray-800"><i class="fas fa-eye text-purple-600 mr-2"></i>Aperçu du message</h3>
+                <h3 class="text-2xl font-bold text-gray-800"><i class="fas fa-eye text-[#1B97B1] mr-2"></i>Aperçu du message</h3>
                 <button onclick="closePreview()" class="text-gray-500 hover:text-gray-700"><i class="fas fa-times text-2xl"></i></button>
             </div>
             <div class="p-6">

@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f3f4f6;
+            background-color: #d9d9d9;
             line-height: 1.6;
         }
         .email-container {
