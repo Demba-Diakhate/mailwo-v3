@@ -70,14 +70,14 @@ $rowCount = count($csvData);
         </div>
         @endif
 
-        <!-- Alerte si pas de CSV importé -->
+        <!-- Alerte si pas de fichier importé -->
         @if(empty($headers))
         <div class="mb-6 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-lg shadow-md">
             <div class="flex items-center">
                 <i class="fas fa-exclamation-triangle text-xl mr-3"></i>
                 <div>
-                    <p class="font-bold">Aucun fichier CSV importé</p>
-                    <p class="text-sm mt-1">Veuillez d'abord <a href="{{ route('import.create') }}" class="underline font-semibold">importer un fichier CSV</a> pour utiliser les variables dynamiques.</p>
+                    <p class="font-bold">Aucun fichier importé</p>
+                    <p class="text-sm mt-1">Veuillez d'abord <a href="{{ route('import.create') }}" class="underline font-semibold">importer un fichier</a> pour utiliser les variables dynamiques.</p>
                 </div>
             </div>
         </div>
@@ -190,7 +190,7 @@ $rowCount = count($csvData);
                     </div>
                 </div>
 
-                <!-- Informations CSV -->
+                <!-- Informations sur le fichier -->
                 <div class="bg-white rounded-xl shadow-xl p-6">
                     <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
                         <i class="fas fa-info-circle text-[#1B97B1] mr-3"></i>
@@ -230,7 +230,7 @@ $rowCount = count($csvData);
                         </li>
                         <li class="flex items-start">
                             <i class="fas fa-check text-[#1B97B1] mr-2 mt-1"></i>
-                            <span>Vérifiez que votre CSV contient la colonne "email"</span>
+                            <span>Vérifiez que votre fichier contient la colonne "email"</span>
                         </li>
                     </ul>
                 </div>
@@ -250,7 +250,7 @@ $rowCount = count($csvData);
                 <p id="previewSubject" class="text-lg font-semibold text-gray-800 mb-4"></p>
                 <p class="text-sm font-bold text-gray-600 mb-1">Corps:</p>
                 <div id="previewBody" class="bg-gray-50 p-4 rounded-lg whitespace-pre-wrap text-gray-800"></div>
-                <p class="text-xs text-gray-500 italic mt-2"><i class="fas fa-info-circle mr-1"></i>Ceci est un aperçu avec les données de la première ligne du CSV</p>
+                <p class="text-xs text-gray-500 italic mt-2"><i class="fas fa-info-circle mr-1"></i>Ceci est un aperçu avec les données de la première ligne du fichier</p>
             </div>
         </div>
     </div>

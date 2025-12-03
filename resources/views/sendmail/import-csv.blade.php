@@ -11,7 +11,7 @@ $filename = Cache::get('csv_filename', '');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Import CSV - Mailwo</title>
+    <title>Import fichier - Mailwo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -21,9 +21,9 @@ $filename = Cache::get('csv_filename', '');
         <div class="mb-8 flex flex-col md:flex-row justify-between items-center">
             <div>
                 <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">
-                <i class="fas fa-file-csv text-[#1B97B1]"></i> Import de fichiers CSV
+                <i class="fas fa-file-excel text-[#1B97B1]"></i> Import de fichiers
                 </h1>
-                <p class="text-gray-600">Importez vos contacts depuis un fichier CSV</p>
+                <p class="text-gray-600">Importez vos contacts depuis un fichier csv,xlsx ou xls</p>
             </div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -77,7 +77,7 @@ $filename = Cache::get('csv_filename', '');
             <div class="bg-white rounded-xl shadow-xl p-8">
                 <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                     <i class="fas fa-upload text-[#1B97B1] mr-3"></i>
-                    Télécharger un fichier CSV
+                    Télécharger un fichier 
                 </h2>
 
                 <form action="{{ route('import.store') }}" method="POST" enctype="multipart/form-data" id="csvForm">
@@ -86,11 +86,11 @@ $filename = Cache::get('csv_filename', '');
                     <!-- Zone de drag & drop -->
                     <div class="mb-6">
                         <div id="dropZone" class="border-3 border-dashed border-indigo-300 rounded-xl p-8 text-center transition-all duration-300 hover:border-[#1B97B1] hover:bg-[#1B97B1]/10 cursor-pointer">
-                            <input type="file" name="csv_file" id="csv_file" class="hidden" accept=".csv,.txt" required>
+                            <input type="file" name="csv_file" id="csv_file" class="hidden" accept=".csv,.txt,.xlsx,.xls" required>
                             
                             <div id="uploadIcon">
                                 <i class="fas fa-cloud-upload-alt text-6xl text-[#1B97B1]/50 mb-4"></i>
-                                <p class="text-lg font-semibold text-gray-700 mb-2">Glissez-déposez votre fichier CSV ici</p>
+                                <p class="text-lg font-semibold text-gray-700 mb-2">Glissez-déposez votre fichier ici</p>
                                 <p class="text-sm text-gray-500 mb-4">ou cliquez pour sélectionner un fichier</p>
                                 <button type="button" onclick="document.getElementById('csv_file').click()" class="bg-[#1B97B1] text-white px-6 py-2 rounded-lg hover:bg-[#1B97B1] transition-colors duration-300">
                                     <i class="fas fa-folder-open mr-2"></i>Parcourir
@@ -98,7 +98,7 @@ $filename = Cache::get('csv_filename', '');
                             </div>
 
                             <div id="fileInfo" class="hidden">
-                                <i class="fas fa-file-csv text-6xl text-[#1B97B1] mb-4"></i>
+                                <i class="fas fa-file text-6xl text-[#1B97B1] mb-4"></i>
                                 <p class="text-lg font-semibold text-gray-700" id="fileName"></p>
                                 <p class="text-sm text-gray-500" id="fileSize"></p>
                                 <button type="button" onclick="clearFile()" class="mt-3 text-red-600 hover:text-red-800">
@@ -110,7 +110,7 @@ $filename = Cache::get('csv_filename', '');
 
                     <!-- Bouton de soumission -->
                     <button type="submit" id="submitBtn" disabled class="w-full bg-gradient-to-r from-[#1B97B1]/90 to-purple-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:from-[#1B97B1] hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
-                        <i class="fas fa-upload mr-2"></i>Importer le fichier CSV
+                        <i class="fas fa-upload mr-2"></i>Extraire les données du fichier
                     </button>
                 </form>
             </div>
@@ -124,24 +124,10 @@ $filename = Cache::get('csv_filename', '');
                         Instructions
                     </h3>
                     <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Le fichier doit être au format <strong>CSV</strong></li>
+                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Le fichier doit être au format : <strong>csv,xlsx ou xls</strong></li>
                         <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Taille maximale : <strong>10 MB</strong></li>
                         <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>La première ligne doit contenir les <strong>en-têtes</strong></li>
-                        <li class="flex items-start"><i class="fas fa-check text-[#1B97B1] mr-3 mt-1"></i>Format d'encodage recommandé : <strong>UTF-8</strong></li>
                     </ul>
-                </div>
-
-                <!-- Exemple de format CSV -->
-                <div class="bg-white rounded-xl shadow-xl p-8">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                        <i class="fas fa-table text-purple-600 mr-3"></i>
-                        Exemple de format CSV
-                    </h3>
-                    <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-                        <pre>email,nom,prenom,entreprise</pre>
-                        <pre>contact@example.com,Dupont,Jean,ACME Corp</pre>
-                        <pre>client@test.fr,Martin,Sophie,TechStart</pre>
-                    </div>
                 </div>
 
                 <!-- Aperçu des headers si disponibles -->
