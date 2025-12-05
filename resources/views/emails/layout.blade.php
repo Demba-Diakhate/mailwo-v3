@@ -18,14 +18,18 @@
             background-color: #ffffff;
         }
         .email-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 30px;
+            background: linear-gradient(135deg, #1b97b1 0%, #dc2c8c 100%);
+            text-align: center;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            height: 100px;
+        }
+        .email-logo-parent {
             text-align: center;
         }
         .email-logo {
             max-width: 200px;
             height: auto;
-            margin-bottom: 20px;
         }
         .email-body {
             padding: 40px 30px;
@@ -36,7 +40,7 @@
             padding: 30px;
             text-align: center;
             border-top: 1px solid #e5e7eb;
-            color: #6b7280;
+            color: #1b97b1;
             font-size: 14px;
         }
         .button {
@@ -83,8 +87,11 @@
 <body>
     <div class="email-container">
         <!-- Header -->
-        <div class="email-header">
+        <div class="email-logo-parent">
             <img src="http://www.wommate.tech/img/logo_principal.png" alt="Wommate Learning" class="email-logo" />
+        </div>
+        <div class="email-header">
+            {{-- <img src="http://www.wommate.tech/img/logo_principal.png" alt="Wommate Learning" class="email-logo" /> --}}
         </div>
 
         <!-- Body -->
@@ -103,9 +110,6 @@
             <div class="divider"></div>
             <p style="margin: 0; font-size: 12px; color: #9ca3af;">
                 © {{ date('Y') }} Wommate Learning. Tous droits réservés.
-            </p>
-            <p style="margin: 10px 0 0 0; font-size: 12px; color: #9ca3af;">
-                Si vous n'avez pas demandé cet email, vous pouvez l'ignorer en toute sécurité.
             </p>
         </div>
     </div>

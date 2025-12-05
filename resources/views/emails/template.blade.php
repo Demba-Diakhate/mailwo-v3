@@ -4,7 +4,7 @@
 <div style="background:#ffffff; border-radius:8px;">
 
     <!-- Title -->
-    <h1 style="
+    {{-- <h1 style="
         font-size:22px;
         font-weight:700;
         color:#1B97B1;
@@ -12,7 +12,7 @@
         text-align:center;
     ">
         {{ $subject }}
-    </h1>
+    </h1> --}}
 
     <!-- Content container -->
     <div style="

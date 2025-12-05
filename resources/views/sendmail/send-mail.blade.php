@@ -94,6 +94,19 @@ $rowCount = count($csvData);
                         Composer votre message
                     </h2>
 
+                    <div class="mb-6 bg-white p-4 rounded-lg shadow-md">
+    <h3 class="font-bold text-gray-800 mb-2">Progression de l'envoi</h3>
+
+    <div class="w-full bg-gray-200 h-4 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-4 bg-gradient-to-r from-[#1B97B1] to-[#DC2C8C] transition-all duration-300" style="width: 0%;"></div>
+    </div>
+
+    <p id="progressText" class="text-sm text-gray-700 mt-2">
+        En attente de l'envoi...
+    </p>
+</div>
+
+
                     <!-- Sujet -->
                     <div class="mb-6">
                         <label for="subject" class="block text-sm font-bold text-gray-700 mb-2">
@@ -312,6 +325,40 @@ $rowCount = count($csvData);
             .animate-fade-in { animation: fadeIn 0.3s ease-out; }
         `;
         document.head.appendChild(style);
+
+
+// Suivi de la progression de l'envoi
+let interval = null;
+
+// Quand on soumet le formulaire → commence la surveillance
+document.getElementById('mailForm').addEventListener('submit', () => {
+    interval = setInterval(fetchProgress, 1000);
+});
+
+// Récupère la progression depuis Laravel
+function fetchProgress() {
+    fetch('/mail-progress')
+        .then(res => res.json())
+        .then(data => {
+            const { total, sent } = data;
+
+            if (total === 0) return;
+
+            const percent = Math.round((sent / total) * 100);
+
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').innerText =
+                `${sent} / ${total} emails envoyés (${percent}%)`;
+
+            if (sent >= total) {
+                clearInterval(interval);
+                document.getElementById('progressText').innerText += " ✔️ Terminé";
+            }
+        });
+}   
     </script>
+
+    
+
 </body>
 </html>

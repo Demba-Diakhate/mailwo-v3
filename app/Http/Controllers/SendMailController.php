@@ -47,6 +47,12 @@ class SendMailController extends Controller
         $csvData = Cache::get('csv_data', []);
         $headers = Cache::get('csv_headers', []);
 
+        Cache::put('mail_progress', [
+    'total' => count($csvData),
+    'sent'  => 0
+]);
+
+
         if (empty($csvData)) {
             return back()->with('error', 'Aucune donnée CSV disponible. Veuillez importer un fichier avant.');
         }
@@ -96,6 +102,12 @@ class SendMailController extends Controller
                 );
 
                 $sentCount++;
+
+                // Mise à jour progression
+$progress = Cache::get('mail_progress');
+$progress['sent']++;
+Cache::put('mail_progress', $progress);
+
 
             } catch (\Exception $e) {
                 Log::error('Erreur envoi email vers ' . $recipientEmail . ' : ' . $e->getMessage());
