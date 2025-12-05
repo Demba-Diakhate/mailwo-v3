@@ -89,7 +89,7 @@ class SendMailController extends Controller
                 // );
                 
                 // Envoi email synchrones
-                Mail::html(
+                $mail = Mail::html(
                     view('emails.template', [
                         'subject' => $subject,
                         'body' => $body

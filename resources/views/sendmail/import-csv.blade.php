@@ -165,7 +165,6 @@ $filename = Cache::get('csv_filename', '');
         const fileSize = document.getElementById('fileSize');
         const submitBtn = document.getElementById('submitBtn');
 
-        dropZone.addEventListener('click', () => { if(!fileInput.files.length) fileInput.click(); });
         dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-indigo-500', 'bg-indigo-50'); });
         dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-indigo-500', 'bg-indigo-50'); });
         dropZone.addEventListener('drop', (e) => {
